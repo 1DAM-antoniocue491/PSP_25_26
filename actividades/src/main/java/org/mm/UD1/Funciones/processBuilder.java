@@ -34,6 +34,22 @@ public class processBuilder {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al ejecutar el comando.", e);
         }
+        return result;
+    }
+
+    public Process ejecutarProceso(List<String> commands)  {
+        ProcessBuilder pb;
+        Process p = null;
+        try {
+            pb = new ProcessBuilder(commands);
+            p = pb.start();
+            p.waitFor();
+            mostrarErrores(p);
+            System.out.println("Comando ejecutado con processbuilder");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error al ejecutar el comando.", e);
+        }
+        return p;
     }
 
     private static String mostrarResultado(Process p) {
@@ -47,6 +63,7 @@ public class processBuilder {
         } catch (IOException ex) {
             System.out.println("Error al leer los datos del proceso");
         }
+        return result;
     }
 
     private static void mostrarErrores(Process p) {

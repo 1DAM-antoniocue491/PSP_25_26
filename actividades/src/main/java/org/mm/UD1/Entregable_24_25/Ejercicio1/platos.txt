@@ -1,0 +1,9 @@
+20:05:40.496388900 -> Se est� preparando una tortilla de camarones.
+
+20:10:25.755236600 -> Se est� preparando un gazpacho.
+
+20:10:37.868515200 -> Se est� preparando un gazpacho.
+
+20:12:51.898167700 -> Se est� preparando un plato de pesca�to frito.
+
+20:12:56.555492900 -> Se est� preparando una tortilla de camarones.
