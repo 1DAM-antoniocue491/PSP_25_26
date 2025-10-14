@@ -52,13 +52,13 @@ public class processBuilder {
         return p;
     }
 
-    private static String mostrarResultado(Process p) {
+    public static String mostrarResultado(Process p) {
         InputStream is = p.getInputStream();
         int letra = 0;
         String result = "";
         try {
             while ((letra = is.read()) != -1) {
-                System.out.print((char) letra);
+                result += (char) letra;
             }
         } catch (IOException ex) {
             System.out.println("Error al leer los datos del proceso");
