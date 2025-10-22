@@ -1,7 +1,6 @@
 package org.mm.UD1.Funciones;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,12 +36,40 @@ public class processBuilder {
         return result;
     }
 
+    public String bigProcessExec(List<String> commands, String logError)  {
+        Process p = null;
+        StringBuilder result = new StringBuilder();
+        try {
+            ProcessBuilder pb = new ProcessBuilder(commands);
+            p = pb.start();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader((p.getInputStream())))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line + "\n");
+                }
+            }
+
+            File f = new File(logError);
+
+            if (logError.isEmpty() || !f.isFile()) {
+                mostrarErrores(p);
+            } else {
+                mostrarErrores(p, logError);
+            }
+
+            p.waitFor();
+            System.out.println("Comando ejecutado con processbuilder");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error al ejecutar el comando.", e);
+        }
+        return result.toString();
+    }
+
     public Process ejecutarProceso(List<String> commands)  {
-        ProcessBuilder pb;
         Process p = null;
         try {
-            pb = new ProcessBuilder(commands);
-            p = pb.start();
+            p = new ProcessBuilder(commands).start();
             p.waitFor();
             mostrarErrores(p);
             System.out.println("Comando ejecutado con processbuilder");
@@ -52,7 +79,7 @@ public class processBuilder {
         return p;
     }
 
-    public static String mostrarResultado(Process p) {
+    public String mostrarResultado(Process p) {
         InputStream is = p.getInputStream();
         int letra = 0;
         String result = "";
@@ -66,7 +93,7 @@ public class processBuilder {
         return result;
     }
 
-    private static void mostrarErrores(Process p) {
+    public void mostrarErrores(Process p) {
         System.out.println("Entramos en mostrar errores");
         InputStream is = p.getErrorStream();
         int letra = 0;
@@ -77,5 +104,21 @@ public class processBuilder {
         } catch (IOException ex) {
             System.out.println("Error al leer los datos del proceso");
         }
+    }
+
+    public void mostrarErrores(Process p, String logError) {
+        writeFile writeFile = new writeFile();
+        System.out.println("Entramos en mostrar errores");
+        InputStream is = p.getErrorStream();
+        String error = "";
+        int letra = 0;
+        try {
+            while ((letra = is.read()) != -1) {
+                error += (char) letra;
+            }
+        } catch (IOException ex) {
+            System.out.println("Error al leer los datos del proceso");
+        }
+        writeFile.sobreEscribirContenido(new File(logError), error, true);
     }
 }

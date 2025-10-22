@@ -25,7 +25,7 @@ public class CountFiles {
     }
 
     private static int obtenerNumeroFicheros(Process p) {
-        String resultado = org.mm.UD1.Funciones.processBuilder.mostrarResultado(p);
+        String resultado = processBuilder.mostrarResultado(p);
         String[] prueba = resultado.split("\n");
 
         return prueba.length;
