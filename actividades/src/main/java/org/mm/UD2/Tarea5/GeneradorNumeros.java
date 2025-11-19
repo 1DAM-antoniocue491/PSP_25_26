@@ -1,24 +1,24 @@
 package org.mm.UD2.Tarea5;
 
-public class EscribirFichero extends Thread{
+public class GeneradorNumeros extends Thread {
     private Buffer buffer;
-    private String ruta;
+    private int id;
 
-    public EscribirFichero(Buffer buffer, String ruta) {
+    public GeneradorNumeros(Buffer buffer, int id) {
         this.buffer = buffer;
-        this.ruta = ruta;
+        this.id = id;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 System.err.println("Error: " + e.getMessage());
             }
 
-            buffer.escribirFichero(ruta);
+            buffer.generar(id);
         }
     }
 }
