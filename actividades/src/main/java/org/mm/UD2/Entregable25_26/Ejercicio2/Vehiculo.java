@@ -35,7 +35,7 @@ public class Vehiculo extends Thread {
                 arrayListTerminado.add(false);
             } else {
                 for (int cant : cantidadRepostajes) {
-                    if (cant == 5) {
+                    if (cant >= 5) {
                         arrayListTerminado.add(true);
                     } else {
                         arrayListTerminado.add(false);

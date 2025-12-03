@@ -28,7 +28,7 @@ public class CamionCisterna extends Thread {
                 arrayListTerminado.add(true);
             } else {
                 for (int cant : cantidadRepostajes) {
-                    if (cant == 5) {
+                    if (cant >= 5) {
                         arrayListTerminado.add(true);
                     } else {
                         arrayListTerminado.add(false);
