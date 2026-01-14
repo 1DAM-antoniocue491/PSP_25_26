@@ -1,14 +1,20 @@
 package org.mm.UD3.Entregable2425;
 
-public class ClientID {
+import java.io.Serializable;
+
+public class ClientID implements Serializable {
     private static int idGeneral = 0;
     private int id;
     private int idPartida;
     private ColorFicha colorFicha;
 
-    public ClientID(int idPartida, ColorFicha colorFicha) {
+    public ClientID() {
         id = idGeneral;
         idGeneral++;
+    }
+
+    public ClientID(int idPartida, ColorFicha colorFicha) {
+        this();
         this.idPartida = idPartida;
         this.colorFicha = colorFicha;
     }
