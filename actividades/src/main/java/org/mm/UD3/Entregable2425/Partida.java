@@ -1,9 +1,10 @@
 package org.mm.UD3.Entregable2425;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Partida {
+public class Partida implements Serializable {
     private Character[][] tablero = new Character[6][7];
     private ColorFicha turnoActual;
     private boolean partidaTerminada;
@@ -132,7 +133,7 @@ public class Partida {
     public boolean realizarMovimiento (int col, ColorFicha fichaRecibida) {
         int fila = 0;
         if (tablero[fila][col] == '.') {
-            while (tablero[fila][col] == '.') {
+            while (fila < tablero.length && tablero[fila][col] == '.') {
                 fila++;
             }
         } else

@@ -35,6 +35,7 @@ public class Servidor {
                     turno = ColorFicha.ROJO;
 
                 listaClientes.add(clientHandler);
+                System.out.println(listaClientes.size());
 
                 if (listaClientes.size() > 2) {
                     ClientHandler cliente1 = listaClientes.get(0);

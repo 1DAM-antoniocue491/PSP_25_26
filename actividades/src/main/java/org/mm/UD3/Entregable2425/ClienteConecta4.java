@@ -52,7 +52,7 @@ public class ClienteConecta4 {
             System.out.println("Se acabó la partida.");
 
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getCause());
+            System.err.println("Exception: " + e.getMessage());
         }
     }
 }
