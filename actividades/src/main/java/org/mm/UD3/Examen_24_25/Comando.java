@@ -1,12 +1,18 @@
 package org.mm.UD3.Examen_24_25;
 
-public class Comando {
+import java.io.Serializable;
+
+public class Comando implements Serializable {
     private TipoComando tipo;
     private String contenido;
 
     public Comando(TipoComando tipo, String contenido) {
         this.tipo = tipo;
         this.contenido = contenido;
+    }
+
+    public Comando(TipoComando tipo) {
+        this.tipo = tipo;
     }
 
     public TipoComando getTipo() {

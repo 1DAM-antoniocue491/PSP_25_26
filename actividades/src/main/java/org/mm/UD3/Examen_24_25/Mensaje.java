@@ -1,8 +1,9 @@
 package org.mm.UD3.Examen_24_25;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Mensaje {
+public class Mensaje implements Serializable {
     private String remitente;
     private String destinatario;
     private String contenido;

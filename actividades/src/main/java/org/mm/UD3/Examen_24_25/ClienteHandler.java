@@ -33,6 +33,7 @@ public class ClienteHandler extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("Empieza la gestión del usuario");
             String nombreUsuario = usuario.getNombre();
             gestorMensajes.registrarUsuario(nombreUsuario, this);
 

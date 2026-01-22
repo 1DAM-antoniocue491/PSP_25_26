@@ -1,10 +1,11 @@
 package org.mm.UD3.Examen_24_25;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GestorMensajes {
+public class GestorMensajes implements Serializable {
     private HashMap<String, ClienteHandler> usuariosConectados;
     private HashMap<String, List<Mensaje>> mensajesPendientes;
 

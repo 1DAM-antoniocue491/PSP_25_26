@@ -1,6 +1,8 @@
 package org.mm.UD3.Examen_24_25;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     private String nombre;
     private String destinatarioPreferido;
     private static Long idConexionGeneral = 1L;
