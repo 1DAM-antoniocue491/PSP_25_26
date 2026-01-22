@@ -1,8 +1,9 @@
 package org.mm.UD3.Examen_24_25;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Respuesta {
+public class Respuesta implements Serializable {
     private TipoRespuesta tipo;
     private String notificacion;
     private List<Mensaje> mensajes;

@@ -9,6 +9,11 @@ public class GestorMensajes implements Serializable {
     private HashMap<String, ClienteHandler> usuariosConectados;
     private HashMap<String, List<Mensaje>> mensajesPendientes;
 
+    public GestorMensajes() {
+        usuariosConectados = new HashMap<>();
+        mensajesPendientes = new HashMap<>();
+    }
+
     public boolean registrarUsuario(String nombre, ClienteHandler clienteHandler) {
         if (usuariosConectados.containsKey(nombre))
             return false;
@@ -31,13 +36,16 @@ public class GestorMensajes implements Serializable {
         return mensajes;
     }
 
-    public void addMensajesPendientes (String destinatario, List<Mensaje> mensajes) {
+    public void addMensajesPendientes (String destinatario, Mensaje mensaje) {
         if (mensajesPendientes.containsKey(destinatario)) {
             List<Mensaje> mensajeList = mensajesPendientes.get(destinatario);
-            mensajeList.addAll(mensajes);
+            mensajeList.add(mensaje);
             mensajesPendientes.put(destinatario, mensajeList);
-        } else
-            mensajesPendientes.put(destinatario, mensajes);
+        } else {
+            List<Mensaje> mensajeList = new ArrayList<>();
+            mensajeList.add(mensaje);
+            mensajesPendientes.put(destinatario, mensajeList);
+        }
     }
 
     public void eliminarUsuarioMensajesPendientes(String destinatario) {

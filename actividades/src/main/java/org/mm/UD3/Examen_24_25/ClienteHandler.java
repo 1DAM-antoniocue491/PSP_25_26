@@ -11,20 +11,17 @@ import java.util.Collection;
 import java.util.List;
 
 public class ClienteHandler extends Thread {
-    private Usuario usuario;
     private List<Mensaje> mensajesRecibidos;
     private GestorMensajes gestorMensajes;
-    private Socket clienteSocket;
-    private ObjectInputStream inputObjetClient;
     private ObjectOutputStream outputObjectClient;
+    private ObjectInputStream inputObjetClient;
+    private Usuario usuario;
 
-    public ClienteHandler(Usuario usuario, GestorMensajes gestorMensajes, Socket clienteSocket) {
-        this.usuario = usuario;
+    public ClienteHandler(GestorMensajes gestorMensajes, Socket clienteSocket) {
         this.gestorMensajes = gestorMensajes;
-        this.clienteSocket = clienteSocket;
         try {
-            inputObjetClient = new ObjectInputStream(clienteSocket.getInputStream());
             outputObjectClient = new ObjectOutputStream(clienteSocket.getOutputStream());
+            inputObjetClient = new ObjectInputStream(clienteSocket.getInputStream());
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
         }
@@ -33,6 +30,10 @@ public class ClienteHandler extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("Conexiones establecidas");
+            usuario = (Usuario) inputObjetClient.readObject();
+            System.out.println("Usuario recibido");
+
             System.out.println("Empieza la gestión del usuario");
             String nombreUsuario = usuario.getNombre();
             gestorMensajes.registrarUsuario(nombreUsuario, this);
@@ -71,16 +72,24 @@ public class ClienteHandler extends Thread {
         }
     }
 
-    private void handleSend(Comando comando) {
+    private void handleSend(Comando comando) throws IOException {
         String contenidoMensaje = comando.getContenido();
 
+        Respuesta respuesta;
+
         List<String> usuariosConectados = gestorMensajes.getOnlineUsers();
-        if (usuariosConectados.contains(usuario.getNombre())) {
-            Mensaje mensaje = new Mensaje(usuario.getNombre(), usuario.getDestinatarioPreferido(), contenidoMensaje, LocalDateTime.now());
-            ClienteHandler clienteHandler = gestorMensajes.getClientHandlerUsuario(usuario.getNombre());
+        Mensaje mensaje = new Mensaje(usuario.getNombre(), usuario.getDestinatarioPreferido(), contenidoMensaje, LocalDateTime.now());
+
+        if (usuariosConectados.contains(usuario.getDestinatarioPreferido())) {
+            ClienteHandler clienteHandler = gestorMensajes.getClientHandlerUsuario(usuario.getDestinatarioPreferido());
             clienteHandler.deliverMessage(mensaje);
+            respuesta = new Respuesta(TipoRespuesta.NOTIFICACION, "El mensaje ha sido enviado con exito");
+        } else {
+            gestorMensajes.addMensajesPendientes(usuario.getDestinatarioPreferido(), mensaje);
+            respuesta = new Respuesta(TipoRespuesta.NOTIFICACION, "El mensaje se le ha añadido a la cola de espera");
         }
 
+        outputObjectClient.writeObject(respuesta);
     }
 
     private void handleView() {
@@ -95,7 +104,7 @@ public class ClienteHandler extends Thread {
                         mensaje.setLeido(true);
                         if (usuariosConectados.contains(mensaje.getRemitente())) {
                             Mensaje mensajeRespuesta = new Mensaje(usuario.getNombre(), mensaje.getRemitente(), "Tu mensaje a " + usuario.getNombre() + " ha sido leido", LocalDateTime.now());
-                            gestorMensajes.addMensajesPendientes(mensaje.getRemitente(), new ArrayList<>((Collection) mensajeRespuesta));
+                            gestorMensajes.addMensajesPendientes(mensaje.getRemitente(), mensajeRespuesta);
                         }
                     }
                 }

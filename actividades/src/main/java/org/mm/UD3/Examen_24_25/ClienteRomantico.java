@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClienteRomantico {
-    private final static String IP = "172.22.160.5";
+    private final static String IP = "localhost";
     private final static int PORT = 6969;
     private static Scanner teclado = new Scanner(System.in);
     private static ObjectOutputStream out;
@@ -30,35 +30,35 @@ public class ClienteRomantico {
             out.writeObject(usuario);
             System.out.println("Usuario enviado");
 
+            Respuesta respuesta = (Respuesta) in.readObject();
+            System.out.println(respuesta.getNotificacion());
+            System.out.println();
+
             while (true) {
                 int opcion = printMenu();
                 switch (opcion) {
                     case 1 -> {
                         sendMessage();
-                        break;
                     }
                     case 2 -> {
                         viewMessage();
-                        break;
                     }
                     case 3 -> {
                         changeDestinatario();
-                        break;
                     }
                     case 4 -> {
                         exit();
-                        break;
                     }
                 }
 
                 try {
-                    Respuesta respuesta = (Respuesta) in.readObject();
-                    if (respuesta.getTipo() == TipoRespuesta.NOTIFICACION) {
+                    Respuesta respuesta1 = (Respuesta) in.readObject();
+                    if (respuesta1.getTipo() == TipoRespuesta.NOTIFICACION) {
                         System.out.println("NOTIFICACIÓN:");
-                        System.out.println(respuesta.getNotificacion());
+                        System.out.println(respuesta1.getNotificacion());
                     } else {
                         System.out.println("LISTA DE MENSAJES:");
-                        for (Mensaje mensaje : respuesta.getMensajes()) {
+                        for (Mensaje mensaje : respuesta1.getMensajes()) {
                             System.out.println("---------------------");
                             System.out.println(mensaje.getRemitente());
                             System.out.println(mensaje.getFechaHora());
@@ -71,6 +71,10 @@ public class ClienteRomantico {
             }
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.err.println("RuntimeException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("ClassNotFoundException" + e.getMessage());
         }
     }
 
@@ -92,7 +96,9 @@ public class ClienteRomantico {
 
     private static void sendMessage() {
         System.out.print("Escribe un mensaje: ");
-        String mensaje = teclado.next();
+        teclado.nextLine();
+        String mensaje = teclado.nextLine();
+        System.out.println();
 
         try {
             Comando comando = new Comando(TipoComando.SEND, mensaje);

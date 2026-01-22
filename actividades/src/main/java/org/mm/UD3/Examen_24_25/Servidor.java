@@ -11,8 +11,6 @@ import java.util.List;
 
 public class Servidor {
     private static final int PORT = 6969;
-    private static ObjectOutputStream out;
-    private static ObjectInputStream in;
 
     public static void main(String[] args) {
         try {
@@ -24,18 +22,10 @@ public class Servidor {
             while (true){
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Un cliente se acaba de conectar al servidor");
-                out = new ObjectOutputStream(clientSocket.getOutputStream());
-                in = new ObjectInputStream(clientSocket.getInputStream());
 
-                System.out.println("Conexiones establecidas");
-                Usuario usuario = (Usuario) in.readObject();
-                System.out.println("Usuario recibido");
-
-                ClienteHandler clienteHandler = new ClienteHandler(usuario, gestorMensajes, clientSocket);
+                ClienteHandler clienteHandler = new ClienteHandler(gestorMensajes, clientSocket);
 
                 clienteHandler.start();
-                out.close();
-                in.close();
             }
 
         } catch (IOException e) {
